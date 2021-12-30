@@ -22,6 +22,10 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.speed_x = 0
         key = pygame.key.get_pressed()
+        if key[pygame.K_UP]:
+            self.rect.bottom -= 5
+        if key[pygame.K_DOWN]:
+            self.rect.bottom += 5
         if key[pygame.K_LEFT]:
             self.speed_x = -5
         if key[pygame.K_RIGHT]:
@@ -29,6 +33,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.speed_x
         if self.rect.right > width:
             self.rect.right = width
+        if self.rect.bottom > 600:
+            self.rect.bottom = 600
+        if self.rect.top < 0:
+            self.rect.top = 0
         if self.rect.left < 0:
             self.rect.left = 0
 
