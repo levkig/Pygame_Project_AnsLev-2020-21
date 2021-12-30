@@ -4,8 +4,6 @@ pygame.init()
 width = 1000
 height = 600
 speed = 60
-is_jump = True
-vec = pygame.math.Vector2
 sc = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Aario")
 clock = pygame.time.Clock()
@@ -21,7 +19,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = width / 2
         self.rect.bottom = height - 10
-        self.vel = vec(0,0)
         self.speed_x = 0
 
     def update(self):
@@ -33,7 +30,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom += 5
         if key[pygame.K_LEFT]:
             self.speed_x = -5
-
         if key[pygame.K_RIGHT]:
             self.speed_x = 5
         self.rect.x += self.speed_x
@@ -47,9 +43,24 @@ class Player(pygame.sprite.Sprite):
             self.rect.left = 0
 
 
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((50, 50))
+        self.image.fill('GREEN')
+        self.rect = self.image.get_rect()
+        self.rect.x = 750
+        self.rect.y = 540
+        self.speed_x = 0
+
+    def update(self):
+        pass
+
+enemy = Enemy()
 all_sprites = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
+all_sprites.add(enemy)
 
 run = True
 while run:
@@ -60,6 +71,8 @@ while run:
 
     all_sprites.update()
     sc.fill('BLACK')
+    pygame.draw.rect(sc, 'RED', (600, 510, 50, 80))
+    pygame.draw.rect(sc, 'RED', (900, 510, 50, 80))
     all_sprites.draw(sc)
     pygame.display.flip()
 
