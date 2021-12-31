@@ -1,0 +1,24 @@
+import pygame
+
+pygame.init()
+sc = pygame.display.set_mode((1800, 900))
+
+f1 = pygame.font.Font(None, 100)
+text1 = f1.render('НАЧАТЬ ЗАНОВО', True, 'White')
+f2 = pygame.font.Font(None, 50)
+text2 = f2.render('ПОДТВЕРДИТЬ', True, 'White')
+f3 = pygame.font.Font(None, 50)
+text3 = f3.render('ВЫЙТИ', True, 'White')
+
+yes = pygame.draw.rect(sc, 'GREEN', (750, 350, 300, 100))
+no = pygame.draw.rect(sc, 'RED', (750, 550, 300, 100))
+sc.blit(text1, (605, 50))
+sc.blit(text2, (765, 380))
+sc.blit(text3, (820, 580))
+pygame.display.update()
+run = True
+while run:
+    for i in pygame.event.get():
+        if i.type == pygame.QUIT:
+            run = False
+pygame.quit()
