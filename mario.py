@@ -1,5 +1,13 @@
 import pygame
 
+player_img = pygame.image.load('mario.png')
+player_img.set_colorkey('White')
+player_img2 = pygame.transform.scale(player_img, (110, 113))
+
+mushroom_img = pygame.image.load('mushroom.png')
+mushroom_img.set_colorkey('White')
+mushroom_img2 = pygame.transform.scale(mushroom_img, (90, 90))
+
 pygame.init()
 width = 1800
 height = 900
@@ -9,13 +17,13 @@ pygame.display.set_caption("Aario")
 clock = pygame.time.Clock()
 pygame.mixer.music.load('music.mp3')
 pygame.mixer.music.play(-1)
+sc.fill((255, 255, 255))
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((50, 50))
-        self.image.fill('GREEN')
+        self.image = player_img2
         self.rect = self.image.get_rect()
         self.rect.centerx = width / 2
         self.rect.bottom = height - 10
@@ -46,8 +54,7 @@ class Player(pygame.sprite.Sprite):
 class Mushroom(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((50, 50))
-        self.image.fill('RED')
+        self.image = mushroom_img2
         self.rect = self.image.get_rect()
         self.rect.x = 1400
         self.rect.y = 890
