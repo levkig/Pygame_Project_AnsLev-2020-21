@@ -38,15 +38,16 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_DOWN]:
             self.rect.bottom += 5
         if key[pygame.K_LEFT]:
-            if self.rect.x == 1240 and self.rect.bottom > 750:
-                print('test')
-                return
+            for obc in self.obstacles:
+                if self.rect.x == obc[0] + 40 and self.rect.bottom > obc[1]:
+                    print('test')
+                    return
             self.speed_x = -5
         if key[pygame.K_RIGHT]:
-            print('right', self.rect.right, 'bottom', self.rect.top)
-            if self.rect.x == 1100 and self.rect.bottom > 750:
-                print('test')
-                return
+            for obc in self.obstacles:
+                if self.rect.x == obc[0] - 100 and self.rect.bottom > obc[1]:
+                    print('test')
+                    return
             self.speed_x = 5
         self.rect.x += self.speed_x
         if self.rect.right > width:
@@ -101,7 +102,7 @@ mushroom = Mushroom(1500, 800)
 pill = Pills(0, 0)
 turtle = Turtle(300, 890)
 all_sprites = pygame.sprite.Group()
-player = Player(0, 800, obstacles=[(1200, 150),])
+player = Player(0, 800, obstacles=[(1200, 750)])
 all_sprites.add(player)
 all_sprites.add(mushroom)
 all_sprites.add(turtle)
