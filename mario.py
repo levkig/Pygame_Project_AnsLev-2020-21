@@ -38,6 +38,9 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_DOWN]:
             self.rect.bottom += 5
         if key[pygame.K_LEFT]:
+            if self.rect.x == 1240 and self.rect.bottom > 750:
+                print('test')
+                return
             self.speed_x = -5
         if key[pygame.K_RIGHT]:
             print('right', self.rect.right, 'bottom', self.rect.top)
@@ -93,6 +96,7 @@ class Pills(pygame.sprite.Sprite):
         self.rect.y = y
         self.speed_x = 0
 
+
 mushroom = Mushroom(1500, 800)
 pill = Pills(0, 0)
 turtle = Turtle(300, 890)
@@ -116,4 +120,3 @@ while run:
     pygame.display.flip()
     pygame.init()
 pygame.quit()
-    
