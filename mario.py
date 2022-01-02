@@ -16,6 +16,8 @@ pill_img = pygame.image.load('pill.png')
 pill_img.set_colorkey('White')
 pill_img2 = pygame.transform.scale(pill_img, (150, 100))
 
+all_sprites = pygame.sprite.Group()
+
 run = True
 pygame.init()
 width = 1800
@@ -68,22 +70,19 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
         if self.rect.left < 0:
             self.rect.left = 0
-        if self.rect.bottom == self.mushroom_info.y:
-            print('1')
+        if self.rect.bottom == self.mushroom_info.pa:
+            all_sprites.remove(mushroom_info)
 
 
 class Mushroom(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = mushroom_img2
-        self.rect_mush = self.image.get_rect()
-        self.x = x
-        self.y = y
-        self.speed_x = 5
-        self.run = run
-
-    def update(self):
-        pass
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.ra = x
+        self.pa = self.rect.top
 
 
 class Turtle(pygame.sprite.Sprite):
@@ -133,7 +132,6 @@ class HorizontalWall(pygame.sprite.Sprite):
         pygame.draw.rect(sc, 'WHITE', (self.x, self.y, self.width_rect, self.height_rect))
 
 
-all_sprites = pygame.sprite.Group()
 pill = Pills(0, 0)
 turtle = Turtle(300, 800)
 mushroom_info = Mushroom(x=1500, y=800)
