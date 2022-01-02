@@ -27,10 +27,10 @@ clock = pygame.time.Clock()
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, obstacles, obstacles2):
+    def __init__(self, x, y, obstacles_hor, obstacles_ver):
         pygame.sprite.Sprite.__init__(self)
-        self.obstacles = obstacles
-        self.obstacles2 = obstacles2
+        self.obstacles_hor = obstacles_hor
+        self.obstacles_ver = obstacles_ver
         self.image = player_img2
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -43,17 +43,18 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_UP]:
             self.rect.bottom -= 5
         if key[pygame.K_DOWN]:
-            for obc in self.obstacles2:
-                if self.rect.bottom == obc[1] + 5 and self.rect.x > obc[0] - 50:
-                    return
+            for obc in self.obstacles_ver:
+                if self.rect.bottom == obc[1] + 5 and self.rect.x > obc[0] - 100:
+                    if self.rect.bottom == obc[1] + 5 and self.rect.x < obc[0] + 200:
+                        return
             self.rect.bottom += 5
         if key[pygame.K_LEFT]:
-            for obc in self.obstacles:
+            for obc in self.obstacles_hor:
                 if self.rect.x == obc[0] + 40 and self.rect.bottom > obc[1]:
                     return
             self.speed_x = -5
         if key[pygame.K_RIGHT]:
-            for obc in self.obstacles:
+            for obc in self.obstacles_hor:
                 if self.rect.x == obc[0] - 100 and self.rect.bottom > obc[1]:
                     return
             self.speed_x = 5
@@ -106,44 +107,52 @@ class Pills(pygame.sprite.Sprite):
 
 
 class VerticalWall(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, width_rect, height_rect):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((50, 150))
-        self.image.fill('GREEN')
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.x = x
+        self.y = y
+        self.width_rect = width_rect
+        self.height_rect = height_rect
+
+    def draw(self):
+        pygame.draw.rect(sc, 'WHITE', (self.x, self.y, self.width_rect, self.height_rect))
 
 
 class HorizontalWall(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, width_rect, height_rect):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((150, 50))
-        self.image.fill('GREEN')
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.x = x
+        self.y = y
+        self.width_rect = width_rect
+        self.height_rect = height_rect
+
+    def draw(self):
+        pygame.draw.rect(sc, 'WHITE', (self.x, self.y, self.width_rect, self.height_rect))
 
 
 all_sprites = pygame.sprite.Group()
 mushroom = Mushroom(1500, 800)
 pill = Pills(0, 0)
 turtle = Turtle(300, 800)
-player = Player(0, 800, obstacles=[(1200, 750)], obstacles2=[(1200, 600)])
+player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)], obstacles_ver=[(1200, 600, 200, 50)])
+hor_wall = HorizontalWall(1200, 600, 200, 50)
+ver_wall = VerticalWall(1200, 750, 50, 150)
 
 all_sprites.add()
 all_sprites.add(player)
 all_sprites.add(mushroom)
 all_sprites.add(turtle)
 all_sprites.add(pill)
+obstacles = [hor_wall, ver_wall]
+
 while run:
     clock.tick(speed)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
     sc.fill('Black')
-    pygame.draw.rect(sc, 'WHITE', (1200, 750, 50, 150))
-    pygame.draw.rect(sc, 'WHITE', (1200, 600, 200, 50))
+    for item in obstacles:
+        item.draw()
     all_sprites.update()
     all_sprites.draw(sc)
     pygame.display.flip()
