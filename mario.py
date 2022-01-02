@@ -72,6 +72,9 @@ class Player(pygame.sprite.Sprite):
             self.rect.left = 0
         if self.rect.bottom == self.mushroom_info.pa:
             all_sprites.remove(mushroom_info)
+        if self.rect.right == self.mushroom_info.ya or \
+                self.rect.left == self.mushroom_info.ta or self.rect.x == self.mushroom_info.ra:
+            print(1)
 
 
 class Mushroom(pygame.sprite.Sprite):
@@ -82,9 +85,9 @@ class Mushroom(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.ra = x
-        self.pa = self.rect.midtop
-        self.ta = self.rect.topleft
-        self.ya = self.rect.topright
+        self.pa = self.rect.top
+        self.ta = self.rect.right
+        self.ya = self.rect.left
 
 
 class Turtle(pygame.sprite.Sprite):
