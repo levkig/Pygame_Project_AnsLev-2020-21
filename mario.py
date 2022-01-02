@@ -104,6 +104,26 @@ class Pills(pygame.sprite.Sprite):
         self.speed_x = 0
 
 
+class VerticalWall(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((50, 150))
+        self.image.fill('GREEN')
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+
+class HorizontalWall(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((150, 50))
+        self.image.fill('GREEN')
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+
 all_sprites = pygame.sprite.Group()
 mushroom = Mushroom(1500, 800)
 pill = Pills(0, 0)
