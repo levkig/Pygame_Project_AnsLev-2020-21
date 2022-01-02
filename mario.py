@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom -= 5
         if key[pygame.K_DOWN]:
             for obc in self.obstacles:
-                if self.rect.bottom == 600 + 10 and self.rect.x > obc[0]:
+                if self.rect.bottom == 600 + 10 and self.rect.x > obc[0] - 50:
                     return
             self.rect.bottom += 5
         if key[pygame.K_LEFT]:
