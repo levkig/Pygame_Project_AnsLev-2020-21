@@ -27,7 +27,7 @@ clock = pygame.time.Clock()
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, obstacles_hor, obstacles_ver):
+    def __init__(self, x, y, obstacles_hor, obstacles_ver, mushroom_info):
         pygame.sprite.Sprite.__init__(self)
         self.obstacles_hor = obstacles_hor
         self.obstacles_ver = obstacles_ver
@@ -45,7 +45,7 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_DOWN]:
             for obc in self.obstacles_ver:
                 if self.rect.bottom == obc[1] + 5 and self.rect.x > obc[0] - 100:
-                    if self.rect.bottom == obc[1] + 5 and self.rect.x < obc[0] + 200:
+                    if self.rect.bottom == obc[1] + 5 and self.rect.x < obc[0] + obc[2]:
                         return
             self.rect.bottom += 5
         if key[pygame.K_LEFT]:
@@ -134,16 +134,19 @@ all_sprites = pygame.sprite.Group()
 mushroom = Mushroom(1500, 800)
 pill = Pills(0, 0)
 turtle = Turtle(300, 800)
-player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)], obstacles_ver=[(1200, 600, 200, 50)])
-hor_wall = HorizontalWall(1200, 600, 200, 50)
+mushroom_info = Mushroom
+player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
+                obstacles_ver=[(600, 650, 200, 50), (300, 700, 200, 50)], mushroom_info=mushroom_info)
 ver_wall = VerticalWall(1200, 750, 50, 150)
-
+hor_wall = HorizontalWall(600, 650, 200, 50)
+hor_wall2 = HorizontalWall(300, 700, 200, 50)
 all_sprites.add()
 all_sprites.add(player)
 all_sprites.add(mushroom)
 all_sprites.add(turtle)
 all_sprites.add(pill)
-obstacles = [hor_wall, ver_wall]
+obstacles = [hor_wall, ver_wall, hor_wall2]
+
 
 while run:
     clock.tick(speed)
