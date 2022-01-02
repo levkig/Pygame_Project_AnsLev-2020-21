@@ -27,9 +27,10 @@ clock = pygame.time.Clock()
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, obstacles):
+    def __init__(self, x, y, obstacles, obstacles2):
         pygame.sprite.Sprite.__init__(self)
         self.obstacles = obstacles
+        self.obstacles2 = obstacles2
         self.image = player_img2
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -42,8 +43,8 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_UP]:
             self.rect.bottom -= 5
         if key[pygame.K_DOWN]:
-            for obc in self.obstacles:
-                if self.rect.bottom == 600 + 10 and self.rect.x > obc[0] - 50:
+            for obc in self.obstacles2:
+                if self.rect.bottom == obc[1] + 5 and self.rect.x > obc[0] - 50:
                     return
             self.rect.bottom += 5
         if key[pygame.K_LEFT]:
@@ -128,7 +129,7 @@ all_sprites = pygame.sprite.Group()
 mushroom = Mushroom(1500, 800)
 pill = Pills(0, 0)
 turtle = Turtle(300, 800)
-player = Player(0, 800, obstacles=[(1200, 750)])
+player = Player(0, 800, obstacles=[(1200, 750)], obstacles2=[(1200, 600)])
 
 all_sprites.add()
 all_sprites.add(player)
