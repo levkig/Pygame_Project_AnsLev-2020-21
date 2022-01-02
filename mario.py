@@ -31,6 +31,7 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.obstacles_hor = obstacles_hor
         self.obstacles_ver = obstacles_ver
+        self.mushroom_info = mushroom_info
         self.image = player_img2
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -67,15 +68,17 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
         if self.rect.left < 0:
             self.rect.left = 0
+        if self.rect.bottom == self.mushroom_info.y:
+            print('1')
 
 
 class Mushroom(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = mushroom_img2
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rect_mush = self.image.get_rect()
+        self.x = x
+        self.y = y
         self.speed_x = 5
         self.run = run
 
@@ -131,10 +134,9 @@ class HorizontalWall(pygame.sprite.Sprite):
 
 
 all_sprites = pygame.sprite.Group()
-mushroom = Mushroom(1500, 800)
 pill = Pills(0, 0)
 turtle = Turtle(300, 800)
-mushroom_info = Mushroom
+mushroom_info = Mushroom(x=1500, y=800)
 player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
                 obstacles_ver=[(600, 650, 200, 50), (300, 700, 200, 50)], mushroom_info=mushroom_info)
 ver_wall = VerticalWall(1200, 750, 50, 150)
@@ -142,7 +144,7 @@ hor_wall = HorizontalWall(600, 650, 200, 50)
 hor_wall2 = HorizontalWall(300, 700, 200, 50)
 all_sprites.add()
 all_sprites.add(player)
-all_sprites.add(mushroom)
+all_sprites.add(mushroom_info)
 all_sprites.add(turtle)
 all_sprites.add(pill)
 obstacles = [hor_wall, ver_wall, hor_wall2]
