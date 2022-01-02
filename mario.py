@@ -2,7 +2,7 @@ import pygame
 
 player_img = pygame.image.load('mario.png')
 player_img.set_colorkey('White')
-player_img2 = pygame.transform.scale(player_img, (110, 113))
+player_img2 = pygame.transform.scale(player_img, (110, 110))
 
 mushroom_img = pygame.image.load('mushroom.png')
 mushroom_img.set_colorkey('White')
@@ -82,7 +82,9 @@ class Mushroom(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.ra = x
-        self.pa = self.rect.top
+        self.pa = self.rect.midtop
+        self.ta = self.rect.topleft
+        self.ya = self.rect.topright
 
 
 class Turtle(pygame.sprite.Sprite):
