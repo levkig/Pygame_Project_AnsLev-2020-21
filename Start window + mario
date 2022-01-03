@@ -144,6 +144,9 @@ while run:
                     self.rect.y = y
                     self.speed_x = 0
 
+                def update(self):
+                    self.speed_x = 0
+
 
             class VerticalWall(pygame.sprite.Sprite):
                 def __init__(self, x, y, width_rect, height_rect):
@@ -171,6 +174,7 @@ while run:
 
             pill = Pills(500, 300)
             turtle = Turtle(300, 800)
+
             mushroom_info = Mushroom(x=1500, y=800)
             player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
                             obstacles_ver=[(600, 680, 200, 50),
@@ -184,7 +188,7 @@ while run:
             all_sprites.add(mushroom_info)
             all_sprites.add(turtle)
             all_sprites.add(pill)
-            obstacles = [hor_wall, ver_wall, hor_wall2, hor_wall3]
+            obstacles = [hor_wall, hor_wall2, hor_wall3, ver_wall]
 
             while run:
                 clock.tick(speed)
@@ -202,6 +206,9 @@ while run:
                     seconds_left = 15
                     used = True
                 if pygame.sprite.collide_rect(player, mushroom_info):
+                    if not used:
+                        run = False
+                if pygame.sprite.collide_rect(player, turtle):
                     if not used:
                         run = False
             pygame.quit()
