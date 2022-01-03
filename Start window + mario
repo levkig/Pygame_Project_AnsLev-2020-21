@@ -45,7 +45,7 @@ while run:
 
             turtle_img = pygame.image.load('turtle.png')
             turtle_img.set_colorkey('White')
-            turtle_img2 = pygame.transform.scale(turtle_img, (150, 100))
+            turtle_img2 = pygame.transform.scale(turtle_img, (150, 90))
 
             pill_img = pygame.image.load('pill.png')
             pill_img.set_colorkey('White')
@@ -105,11 +105,6 @@ while run:
                         self.rect.top = 0
                     if self.rect.left < 0:
                         self.rect.left = 0
-                    if self.rect.bottom == self.mushroom_info.pa:
-                        all_sprites.remove(mushroom_info)
-                    if self.rect.right == self.mushroom_info.ya or \
-                            self.rect.left == self.mushroom_info.ta or self.rect.x == self.mushroom_info.ra:
-                        print(1)
 
 
             class Mushroom(pygame.sprite.Sprite):
@@ -172,16 +167,16 @@ while run:
                     pygame.draw.rect(sc, 'WHITE', (self.x, self.y, self.width_rect, self.height_rect))
 
 
-            pill = Pills(0, 0)
+            pill = Pills(500, 300)
             turtle = Turtle(300, 800)
             mushroom_info = Mushroom(x=1500, y=800)
             player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
-                            obstacles_ver=[(600, 650, 200, 50),
-                                           (300, 700, 200, 50), (950, 650, 200, 50)], mushroom_info=mushroom_info)
+                            obstacles_ver=[(600, 680, 200, 50),
+                                           (300, 730, 200, 50), (950, 680, 200, 50)], mushroom_info=mushroom_info)
             ver_wall = VerticalWall(1200, 750, 50, 150)
-            hor_wall = HorizontalWall(600, 650, 200, 50)
-            hor_wall2 = HorizontalWall(300, 700, 200, 50)
-            hor_wall3 = HorizontalWall(950, 650, 200, 50)
+            hor_wall = HorizontalWall(600, 680, 200, 50)
+            hor_wall2 = HorizontalWall(300, 730, 200, 50)
+            hor_wall3 = HorizontalWall(950, 680, 200, 50)
             all_sprites.add()
             all_sprites.add(player)
             all_sprites.add(mushroom_info)
@@ -200,4 +195,8 @@ while run:
                 all_sprites.update()
                 all_sprites.draw(sc)
                 pygame.display.flip()
+                if pygame.sprite.collide_rect(player, pill):
+                    all_sprites.remove(pill)
+                if pygame.sprite.collide_rect(player, mushroom_info):
+                    run = False
             pygame.quit()
