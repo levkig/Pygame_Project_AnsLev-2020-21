@@ -1,4 +1,5 @@
 import pygame
+from time import sleep
 
 run = True
 pygame.font.init()
@@ -198,6 +199,7 @@ while run:
                 pygame.display.flip()
                 if pygame.sprite.collide_rect(player, pill):
                     all_sprites.remove(pill)
+                    seconds_left = 15
                     used = True
                 if pygame.sprite.collide_rect(player, mushroom_info):
                     if not used:
