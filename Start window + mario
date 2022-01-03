@@ -176,16 +176,18 @@ while run:
             turtle = Turtle(300, 800)
             mushroom_info = Mushroom(x=1500, y=800)
             player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
-                            obstacles_ver=[(600, 650, 200, 50), (300, 700, 200, 50)], mushroom_info=mushroom_info)
+                            obstacles_ver=[(600, 650, 200, 50),
+                                           (300, 700, 200, 50), (950, 650, 200, 50)], mushroom_info=mushroom_info)
             ver_wall = VerticalWall(1200, 750, 50, 150)
             hor_wall = HorizontalWall(600, 650, 200, 50)
             hor_wall2 = HorizontalWall(300, 700, 200, 50)
+            hor_wall3 = HorizontalWall(950, 650, 200, 50)
             all_sprites.add()
             all_sprites.add(player)
             all_sprites.add(mushroom_info)
             all_sprites.add(turtle)
             all_sprites.add(pill)
-            obstacles = [hor_wall, ver_wall, hor_wall2]
+            obstacles = [hor_wall, ver_wall, hor_wall2, hor_wall3]
 
             while run:
                 clock.tick(speed)
