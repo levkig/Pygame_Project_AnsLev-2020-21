@@ -3,6 +3,7 @@ from time import sleep
 
 run = True
 pygame.font.init()
+pygame.init()
 sc = pygame.display.set_mode((1800, 900))
 
 f1 = pygame.font.Font(None, 100)
@@ -23,7 +24,8 @@ sc.blit(text2, (765, 360))
 sc.blit(text3, (820, 560))
 sc.blit(text4, (830, 600))
 sc.blit(text5, (850, 400))
-
+pygame.mixer.music.load('music.mp3')
+pygame.mixer.music.play(-1)
 pygame.display.update()
 pos = pygame.mouse.get_pos()
 key = pygame.mouse.get_pressed()
