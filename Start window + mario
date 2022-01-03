@@ -61,6 +61,7 @@ while run:
             sc = pygame.display.set_mode((width, height))
             pygame.display.set_caption("Aario")
             clock = pygame.time.Clock()
+            used = False
 
 
             class Player(pygame.sprite.Sprite):
@@ -197,6 +198,8 @@ while run:
                 pygame.display.flip()
                 if pygame.sprite.collide_rect(player, pill):
                     all_sprites.remove(pill)
+                    used = True
                 if pygame.sprite.collide_rect(player, mushroom_info):
-                    run = False
+                    if not used:
+                        run = False
             pygame.quit()
