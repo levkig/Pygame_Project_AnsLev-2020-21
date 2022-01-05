@@ -78,12 +78,20 @@ while run:
                     self.rect.x = x
                     self.rect.y = y
                     self.speed_x = 0
+                    self.isJump = False
+                    self.jumpCount = 10
 
                 def update(self):
                     self.speed_x = 0
                     key = pygame.key.get_pressed()
                     if key[pygame.K_UP]:
-                        self.rect.bottom -= 5
+                        for _ in range(10):
+                            self.rect.bottom -= 1
+                            sleep(0.01)
+                        for _ in range(10):
+                            self.rect.bottom += 1
+                            sleep(0.01)
+
                     if key[pygame.K_DOWN]:
                         for obc in self.obstacles_ver:
                             if self.rect.bottom == obc[1] + 5 and self.rect.x > obc[0] - 100:
@@ -110,6 +118,17 @@ while run:
                     if self.rect.left < 0:
                         self.rect.left = 0
 
+                def jump(self):
+                    if self.isJump:
+                        if self.jumpCount >= -10:
+                            neg = 1
+                            if self.jumpCount < 0:
+                                neg = -1
+                            self.rect.y -= self.jumpCount ** 2 * 0.1 * neg
+                            self.jumpCount -= 1
+                        else:
+                            self.isJump = False
+                            self.jumpCount = 10
 
             class Mushroom(pygame.sprite.Sprite):
                 def __init__(self, x, y):
@@ -210,6 +229,10 @@ while run:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         run = False
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            player.isJump = True
+
                 sc.fill('Black')
                 for item in obstacles:
                     item.draw()
@@ -229,4 +252,3 @@ while run:
                 if pygame.sprite.collide_rect(player, bomb):
                     run = False
             pygame.quit()
-
