@@ -1,5 +1,6 @@
 import pygame
 from time import sleep
+import random
 
 run = True
 pygame.font.init()
@@ -61,6 +62,7 @@ while run:
             width = 1800
             height = 900
             speed = 60
+            neg = 2
             sc = pygame.display.set_mode((width, height))
             pygame.display.set_caption("Aario")
             clock = pygame.time.Clock()
@@ -80,18 +82,13 @@ while run:
                     self.speed_x = 0
                     self.isJump = False
                     self.jumpCount = 10
+                    self.neg = 2
 
                 def update(self):
                     self.speed_x = 0
                     key = pygame.key.get_pressed()
                     if key[pygame.K_UP]:
-                        for _ in range(10):
-                            self.rect.bottom -= 1
-                            sleep(0.01)
-                        for _ in range(10):
-                            self.rect.bottom += 1
-                            sleep(0.01)
-
+                        self.rect.bottom -= 5
                     if key[pygame.K_DOWN]:
                         for obc in self.obstacles_ver:
                             if self.rect.bottom == obc[1] + 5 and self.rect.x > obc[0] - 100:
@@ -121,14 +118,19 @@ while run:
                 def jump(self):
                     if self.isJump:
                         if self.jumpCount >= -10:
-                            neg = 1
+                            neg = 2
+                            if pygame.sprite.collide_rect(player, pill):
+                                neg = 4
                             if self.jumpCount < 0:
-                                neg = -1
+                                neg = -2
+                                if pygame.sprite.collide_rect(player, pill):
+                                    neg -= 4
                             self.rect.y -= self.jumpCount ** 2 * 0.1 * neg
                             self.jumpCount -= 1
                         else:
                             self.isJump = False
                             self.jumpCount = 10
+
 
             class Mushroom(pygame.sprite.Sprite):
                 def __init__(self, x, y):
@@ -141,6 +143,7 @@ while run:
                     self.pa = self.rect.top
                     self.ta = self.rect.right
                     self.ya = self.rect.left
+                    self.random = random.randint(1300, 1800)
 
 
             class Turtle(pygame.sprite.Sprite):
@@ -204,10 +207,9 @@ while run:
                     pygame.draw.rect(sc, 'WHITE', (self.x, self.y, self.width_rect, self.height_rect))
 
 
-            pill = Pills(500, 300)
-            turtle = Turtle(300, 800)
-            bomb = Bomb(200, 800)
-
+            pill = Pills(500, 800)
+            turtle = Turtle(1700, 800)
+            bomb = Bomb(1600, 800)
             mushroom_info = Mushroom(x=1500, y=800)
             player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
                             obstacles_ver=[(600, 680, 200, 50),
@@ -242,13 +244,11 @@ while run:
                 if pygame.sprite.collide_rect(player, pill):
                     all_sprites.remove(pill)
                     seconds_left = 15
+                    neg = 4
                     used = True
                 if pygame.sprite.collide_rect(player, mushroom_info):
                     if not used:
                         run = False
-                if pygame.sprite.collide_rect(player, turtle):
-                    if not used:
-                        run = False
-                if pygame.sprite.collide_rect(player, bomb):
-                    run = False
+
+                player.jump()
             pygame.quit()
