@@ -27,7 +27,7 @@ sc.blit(text5, (850, 400))
 
 
 pygame.mixer.music.load('music.mp3')
-pygame.mixer.music.load(-1)
+pygame.mixer.music.play(-1)
 pygame.display.update()
 pos = pygame.mouse.get_pos()
 key = pygame.mouse.get_pressed()
@@ -214,10 +214,16 @@ while run:
             player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
                             obstacles_ver=[(600, 680, 200, 50),
                                            (300, 730, 200, 50), (950, 680, 200, 50)], mushroom_info=mushroom_info)
+
             ver_wall = VerticalWall(1200, 750, 50, 150)
             hor_wall = HorizontalWall(600, 680, 200, 50)
             hor_wall2 = HorizontalWall(300, 730, 200, 50)
             hor_wall3 = HorizontalWall(950, 680, 200, 50)
+            f6 = pygame.font.Font(None, 75)
+            text6 = f6.render('ОЧКИ', True, 'White')
+            f7 = pygame.font.Font(None, 75)
+            text7 = f7.render('НУЖНО ОЧКОВ', True, 'White')
+
             all_sprites.add()
             all_sprites.add(player)
             all_sprites.add(mushroom_info)
@@ -237,6 +243,8 @@ while run:
                             player.isJump = True
 
                 sc.fill('Black')
+                sc.blit(text6, (00, 0))
+                sc.blit(text7, (500, 0))
                 for item in obstacles:
                     item.draw()
                 all_sprites.update()
@@ -255,7 +263,5 @@ while run:
                         over = True
                 if pygame.sprite.collide_rect(player, bomb):
                     over = True
-                if over:
-                    
                 player.jump()
             pygame.quit()
