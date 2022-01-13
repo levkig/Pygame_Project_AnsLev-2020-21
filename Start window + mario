@@ -27,7 +27,7 @@ sc.blit(text5, (850, 400))
 
 
 pygame.mixer.music.load('music.mp3')
-pygame.mixer.music.play(-1)
+pygame.mixer.music.load(-1)
 pygame.display.update()
 pos = pygame.mouse.get_pos()
 key = pygame.mouse.get_pressed()
@@ -118,13 +118,13 @@ while run:
                 def jump(self):
                     if self.isJump:
                         if self.jumpCount >= -10:
-                            neg = 2
+                            neg = 5
                             if pygame.sprite.collide_rect(player, pill):
-                                neg = 4
+                                neg = 5
                             if self.jumpCount < 0:
-                                neg = -2
+                                neg = -5
                                 if pygame.sprite.collide_rect(player, pill):
-                                    neg -= 4
+                                    neg -= 5
                             self.rect.y -= self.jumpCount ** 2 * 0.1 * neg
                             self.jumpCount -= 1
                         else:
@@ -225,6 +225,7 @@ while run:
             all_sprites.add(pill)
             all_sprites.add(bomb)
             obstacles = [hor_wall, hor_wall2, hor_wall3, ver_wall]
+            over = False
 
             while run:
                 clock.tick(speed)
@@ -248,7 +249,13 @@ while run:
                     used = True
                 if pygame.sprite.collide_rect(player, mushroom_info):
                     if not used:
-                        run = False
-
+                        over = True
+                if pygame.sprite.collide_rect(player, turtle):
+                    if not used:
+                        over = True
+                if pygame.sprite.collide_rect(player, bomb):
+                    over = True
+                if over:
+                    
                 player.jump()
             pygame.quit()
