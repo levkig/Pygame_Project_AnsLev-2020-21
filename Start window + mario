@@ -16,6 +16,8 @@ f4 = pygame.font.Font(None, 50)
 text4 = f4.render('Escape', True, 'White')
 f5 = pygame.font.Font(None, 50)
 text5 = f5.render('Space', True, 'White')
+balls = 0
+ochko = 0
 
 yes = pygame.draw.rect(sc, 'GREEN', (750, 350, 300, 100))
 no = pygame.draw.rect(sc, 'RED', (750, 550, 300, 100))
@@ -201,6 +203,7 @@ while run:
                     self.hp = 5
                     self.speed_x = 0
 
+
             class Ball(pygame.sprite.Sprite):
                 def __init__(self, x, y):
                     pygame.sprite.Sprite.__init__(self)
@@ -213,9 +216,11 @@ while run:
                     self.left_side = left_side
                     self.right_side = right_side
 
+
             class BallThrow(pygame.sprite.Sprite):
                 def __init__(self, x, y, player_info):
                     pygame.sprite.Sprite.__init__(self)
+
                     self.image = pygame.Surface((50, 50))
                     self.image.fill('RED')
                     self.rect = self.image.get_rect()
@@ -225,11 +230,46 @@ while run:
                     self.player_info = player_info
                     self.left_side = left_side
                     self.right_side = right_side
-                
+
                 def throw(self):
                     self.player_info[0] = self.rect.x
                     self.rect.x += 1
-                    
+
+
+            class Knife(pygame.sprite.Sprite):
+                def __init__(self, x, y, player_info):
+                    pygame.sprite.Sprite.__init__(self)
+
+                    self.image = pygame.Surface((50, 50))
+                    self.image.fill('RED')
+                    self.rect = self.image.get_rect()
+                    self.rect.x = x
+                    self.rect.y = y
+                    self.speed_x = 0
+                    self.player_info = player_info
+                    self.left_side = left_side
+                    self.right_side = right_side
+
+
+            class KnifeThrow(pygame.sprite.Sprite):
+                def __init__(self, x, y, player_info):
+                    pygame.sprite.Sprite.__init__(self)
+
+                    self.image = pygame.Surface((50, 50))
+                    self.image.fill('RED')
+                    self.rect = self.image.get_rect()
+                    self.rect.x = x
+                    self.rect.y = y
+                    self.speed_x = 0
+                    self.player_info = player_info
+                    self.left_side = left_side
+                    self.right_side = right_side
+
+                def throw(self):
+                    self.player_info[0] = self.rect.x
+                    self.rect.x += 1
+
+
             class VerticalWall(pygame.sprite.Sprite):
                 def __init__(self, x, y, width_rect, height_rect):
                     pygame.sprite.Sprite.__init__(self)
@@ -267,12 +307,12 @@ while run:
             ball3 = Ball(250, 300)
             ball4 = Ball(350, 300)
             ball5 = Ball(450, 300)
-
+            knife = KnifeThrow(0, 0, player_info=player)
             ver_wall = VerticalWall(1200, 750, 50, 150)
             hor_wall = HorizontalWall(600, 680, 200, 50)
             hor_wall2 = HorizontalWall(300, 730, 200, 50)
             hor_wall3 = HorizontalWall(950, 680, 200, 50)
-            balls = 0
+
             f6 = pygame.font.Font(None, 75)
             text6 = f6.render('ОЧКИ:', True, 'White')
             f7 = pygame.font.Font(None, 75)
@@ -281,6 +321,8 @@ while run:
             text8 = f8.render('МЯЧЕЙ:', True, 'White')
             f9 = pygame.font.Font(None, 75)
             text9 = f9.render(str(balls), True, 'White')
+            f10 = pygame.font.Font(None, 75)
+            text10 = f10.render(str(ochko), True, 'White')
 
             weapon = pygame.sprite.Group()
             weapon.add(ball1)
@@ -309,8 +351,8 @@ while run:
 
                 sc.fill('Black')
                 sc.blit(text6, (00, 0))
-                sc.blit(text7, (500, 0))
                 sc.blit(text8, (1300, 0))
+                sc.blit(text10, (300, 0))
                 sc.blit(text9, (1550, 0))
 
                 for item in obstacles:
@@ -349,4 +391,5 @@ while run:
                     balls += 1
                     weapon.remove(ball5)
                 player.jump()
+                knife.throw()
             pygame.quit()
