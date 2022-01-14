@@ -67,7 +67,8 @@ while run:
             pygame.display.set_caption("Aario")
             clock = pygame.time.Clock()
             used = False
-
+            right_side = False
+            left_side = False
 
             class Player(pygame.sprite.Sprite):
                 def __init__(self, x, y, obstacles_hor, obstacles_ver, mushroom_info):
@@ -82,6 +83,8 @@ while run:
                     self.speed_x = 0
                     self.isJump = False
                     self.jumpCount = 10
+                    self.left_side = left_side
+                    self.right_side = right_side
                     self.neg = 2
 
                 def update(self):
@@ -100,11 +103,15 @@ while run:
                             if self.rect.x == obc[0] + 40 and self.rect.bottom > obc[1]:
                                 return
                         self.speed_x = -5
+                        left_side = True
+                        right_side = False
                     if key[pygame.K_RIGHT]:
                         for obc in self.obstacles_hor:
                             if self.rect.x == obc[0] - 100 and self.rect.bottom > obc[1]:
                                 return
                         self.speed_x = 5
+                        left_side = False
+                        right_side = True
                     self.rect.x += self.speed_x
                     if self.rect.right > width:
                         self.rect.right = width
@@ -203,7 +210,26 @@ while run:
                     self.rect.x = x
                     self.rect.y = y
                     self.speed_x = 0
+                    self.left_side = left_side
+                    self.right_side = right_side
 
+            class BallThrow(pygame.sprite.Sprite):
+                def __init__(self, x, y, player_info):
+                    pygame.sprite.Sprite.__init__(self)
+                    self.image = pygame.Surface((50, 50))
+                    self.image.fill('RED')
+                    self.rect = self.image.get_rect()
+                    self.rect.x = x
+                    self.rect.y = y
+                    self.speed_x = 0
+                    self.player_info = player_info
+                    self.left_side = left_side
+                    self.right_side = right_side
+                
+                def throw(self):
+                    self.player_info[0] = self.rect.x
+                    self.rect.x += 1
+                    
             class VerticalWall(pygame.sprite.Sprite):
                 def __init__(self, x, y, width_rect, height_rect):
                     pygame.sprite.Sprite.__init__(self)
@@ -232,15 +258,15 @@ while run:
             turtle = Turtle(1700, 800)
             bomb = Bomb(1600, 800)
             boss = Boss(50, 100)
+            mushroom_info = Mushroom(x=1500, y=800)
+            player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
+                            obstacles_ver=[(600, 680, 200, 50),
+                                           (300, 730, 200, 50), (950, 680, 200, 50)], mushroom_info=mushroom_info)
             ball1 = Ball(50, 300)
             ball2 = Ball(150, 300)
             ball3 = Ball(250, 300)
             ball4 = Ball(350, 300)
             ball5 = Ball(450, 300)
-            mushroom_info = Mushroom(x=1500, y=800)
-            player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
-                            obstacles_ver=[(600, 680, 200, 50),
-                                           (300, 730, 200, 50), (950, 680, 200, 50)], mushroom_info=mushroom_info)
 
             ver_wall = VerticalWall(1200, 750, 50, 150)
             hor_wall = HorizontalWall(600, 680, 200, 50)
