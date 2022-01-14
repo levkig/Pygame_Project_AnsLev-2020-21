@@ -183,6 +183,27 @@ while run:
                     self.speed_x = 0
 
 
+            class Boss(pygame.sprite.Sprite):
+                def __init__(self, x, y):
+                    pygame.sprite.Sprite.__init__(self)
+                    self.image = pygame.Surface((1500, 50))
+                    self.image.fill('RED')
+                    self.rect = self.image.get_rect()
+                    self.rect.x = x
+                    self.rect.y = y
+                    self.hp = 5
+                    self.speed_x = 0
+
+            class Ball(pygame.sprite.Sprite):
+                def __init__(self, x, y):
+                    pygame.sprite.Sprite.__init__(self)
+                    self.image = pygame.Surface((50, 50))
+                    self.image.fill('RED')
+                    self.rect = self.image.get_rect()
+                    self.rect.x = x
+                    self.rect.y = y
+                    self.speed_x = 0
+
             class VerticalWall(pygame.sprite.Sprite):
                 def __init__(self, x, y, width_rect, height_rect):
                     pygame.sprite.Sprite.__init__(self)
@@ -210,6 +231,12 @@ while run:
             pill = Pills(500, 800)
             turtle = Turtle(1700, 800)
             bomb = Bomb(1600, 800)
+            boss = Boss(50, 100)
+            ball1 = Ball(50, 300)
+            ball2 = Ball(150, 300)
+            ball3 = Ball(250, 300)
+            ball4 = Ball(350, 300)
+            ball5 = Ball(450, 300)
             mushroom_info = Mushroom(x=1500, y=800)
             player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
                             obstacles_ver=[(600, 680, 200, 50),
@@ -219,17 +246,29 @@ while run:
             hor_wall = HorizontalWall(600, 680, 200, 50)
             hor_wall2 = HorizontalWall(300, 730, 200, 50)
             hor_wall3 = HorizontalWall(950, 680, 200, 50)
+            balls = 0
             f6 = pygame.font.Font(None, 75)
-            text6 = f6.render('ОЧКИ', True, 'White')
+            text6 = f6.render('ОЧКИ:', True, 'White')
             f7 = pygame.font.Font(None, 75)
-            text7 = f7.render('НУЖНО ОЧКОВ', True, 'White')
+            text7 = f7.render('НУЖНО ОЧКОВ:', True, 'White')
+            f8 = pygame.font.Font(None, 75)
+            text8 = f8.render('МЯЧЕЙ:', True, 'White')
+            f9 = pygame.font.Font(None, 75)
+            text9 = f9.render(str(balls), True, 'White')
 
+            weapon = pygame.sprite.Group()
+            weapon.add(ball1)
+            weapon.add(ball2)
+            weapon.add(ball3)
+            weapon.add(ball4)
+            weapon.add(ball5)
             all_sprites.add()
             all_sprites.add(player)
             all_sprites.add(mushroom_info)
             all_sprites.add(turtle)
             all_sprites.add(pill)
             all_sprites.add(bomb)
+            all_sprites.add(boss)
             obstacles = [hor_wall, hor_wall2, hor_wall3, ver_wall]
             over = False
 
@@ -245,10 +284,15 @@ while run:
                 sc.fill('Black')
                 sc.blit(text6, (00, 0))
                 sc.blit(text7, (500, 0))
+                sc.blit(text8, (1300, 0))
+                sc.blit(text9, (1550, 0))
+
                 for item in obstacles:
                     item.draw()
                 all_sprites.update()
                 all_sprites.draw(sc)
+                weapon.update()
+                weapon.draw(sc)
                 pygame.display.flip()
                 if pygame.sprite.collide_rect(player, pill):
                     all_sprites.remove(pill)
@@ -263,5 +307,20 @@ while run:
                         over = True
                 if pygame.sprite.collide_rect(player, bomb):
                     over = True
+                if pygame.sprite.collide_rect(player, ball1):
+                    balls += 1
+                    weapon.remove(ball1)
+                if pygame.sprite.collide_rect(player, ball2):
+                    balls += 1
+                    weapon.remove(ball2)
+                if pygame.sprite.collide_rect(player, ball3):
+                    balls += 1
+                    weapon.remove(ball3)
+                if pygame.sprite.collide_rect(player, ball4):
+                    balls += 1
+                    weapon.remove(ball4)
+                if pygame.sprite.collide_rect(player, ball5):
+                    balls += 1
+                    weapon.remove(ball5)
                 player.jump()
             pygame.quit()
