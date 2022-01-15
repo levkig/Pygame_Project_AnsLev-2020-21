@@ -16,9 +16,9 @@ f4 = pygame.font.Font(None, 50)
 text4 = f4.render('Escape', True, 'White')
 f5 = pygame.font.Font(None, 50)
 text5 = f5.render('Space', True, 'White')
-balls = 0
-ochko = 0
 boss_group = pygame.sprite.Group()
+pygame.mixer.music.play(-1)
+
 yes = pygame.draw.rect(sc, 'GREEN', (750, 350, 300, 100))
 no = pygame.draw.rect(sc, 'RED', (750, 550, 300, 100))
 sc.blit(text1, (660, 50))
@@ -31,7 +31,6 @@ turtle_group = pygame.sprite.Group()
 bomb_group = pygame.sprite.Group()
 
 pygame.mixer.music.load('music.mp3')
-pygame.mixer.music.play(-1)
 pygame.display.update()
 pos = pygame.mouse.get_pos()
 key = pygame.mouse.get_pressed()
@@ -59,6 +58,8 @@ while run:
             pill_img = pygame.image.load('pill.png')
             pill_img.set_colorkey('White')
             pill_img2 = pygame.transform.scale(pill_img, (150, 100))
+            ochko = 0
+            balls = 0
             hp = 25
             bullets = pygame.sprite.Group()
             all_sprites = pygame.sprite.Group()
@@ -283,6 +284,7 @@ while run:
                     self.rect.bottom = y
                     self.rect.centerx = x
                     self.speedy = -10
+                    self.ball = balls
 
                 def update(self):
                     self.rect.y += self.speedy
@@ -340,12 +342,8 @@ while run:
             text7 = f7.render('НУЖНО ОЧКОВ:', True, 'White')
             f8 = pygame.font.Font(None, 75)
             text8 = f8.render('МЯЧЕЙ:', True, 'White')
-            f9 = pygame.font.Font(None, 75)
-            boss_group.add(boss)
-            text9 = f9.render(str(balls), True, 'White')
-            f10 = pygame.font.Font(None, 75)
-            text10 = f10.render(str(ochko), True, 'White')
 
+            boss_group.add(boss)
             weapon = pygame.sprite.Group()
             weapon.add(ball1)
             weapon.add(ball2)
@@ -371,13 +369,35 @@ while run:
                         if event.key == pygame.K_SPACE:
                             player.isJump = True
                         if event.key == pygame.K_e:
+                            balls += 1
                             player.shoot()
 
+                if pygame.sprite.collide_rect(player, ball1):
+                    ochko += 1
+                    weapon.remove(ball1)
+                if pygame.sprite.collide_rect(player, ball2):
+                    ochko += 1
+                    weapon.remove(ball2)
+                if pygame.sprite.collide_rect(player, ball3):
+                    ochko += 1
+                    weapon.remove(ball3)
+                if pygame.sprite.collide_rect(player, ball4):
+                    ochko += 1
+                    weapon.remove(ball4)
+                if pygame.sprite.collide_rect(player, ball5):
+                    ochko += 1
+                    weapon.remove(ball5)
+
                 sc.fill('Black')
+                f9 = pygame.font.Font(None, 75)
+                text9 = f9.render(str(balls), True, 'White')
+                f10 = pygame.font.Font(None, 75)
+                text10 = f10.render(str(ochko), True, 'White')
+
                 sc.blit(text6, (00, 0))
                 sc.blit(text8, (1300, 0))
-                sc.blit(text10, (300, 0))
                 sc.blit(text9, (1550, 0))
+                sc.blit(text10, (200, 0))
                 mushroom.add(mushroom_info)
                 turtle_group.add(turtle)
                 bomb_group.add(bomb)
@@ -401,22 +421,10 @@ while run:
                         over = True
                 if pygame.sprite.collide_rect(player, bomb):
                     over = True
-                if pygame.sprite.collide_rect(player, ball1):
-                    balls += 1
-                    weapon.remove(ball1)
-                if pygame.sprite.collide_rect(player, ball2):
-                    balls += 1
-                    weapon.remove(ball2)
-                if pygame.sprite.collide_rect(player, ball3):
-                    balls += 1
-                    weapon.remove(ball3)
-                if pygame.sprite.collide_rect(player, ball4):
-                    balls += 1
-                    weapon.remove(ball4)
-                if pygame.sprite.collide_rect(player, ball5):
-                    balls += 1
-                    weapon.remove(ball5)
-                if pygame.sprite.groupcollide(boss_group, bullets, True, True):
-                    hp -= 1    
+                if pygame.sprite.groupcollide(boss_group, bullets, False, True):
+                    hp -= 1
+                    print(hp)
+                if hp <= 0:
+                    all_sprites.remove(boss)
                 player.jump()
             pygame.quit()
