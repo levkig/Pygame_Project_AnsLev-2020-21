@@ -18,7 +18,7 @@ f5 = pygame.font.Font(None, 50)
 text5 = f5.render('Space', True, 'White')
 balls = 0
 ochko = 0
-
+boss_group = pygame.sprite.Group()
 yes = pygame.draw.rect(sc, 'GREEN', (750, 350, 300, 100))
 no = pygame.draw.rect(sc, 'RED', (750, 550, 300, 100))
 sc.blit(text1, (660, 50))
@@ -26,7 +26,9 @@ sc.blit(text2, (765, 360))
 sc.blit(text3, (820, 560))
 sc.blit(text4, (830, 600))
 sc.blit(text5, (850, 400))
-
+mushroom = pygame.sprite.Group()
+turtle_group = pygame.sprite.Group()
+bomb_group = pygame.sprite.Group()
 
 pygame.mixer.music.load('music.mp3')
 pygame.mixer.music.play(-1)
@@ -57,7 +59,8 @@ while run:
             pill_img = pygame.image.load('pill.png')
             pill_img.set_colorkey('White')
             pill_img2 = pygame.transform.scale(pill_img, (150, 100))
-
+            hp = 25
+            bullets = pygame.sprite.Group()
             all_sprites = pygame.sprite.Group()
             run = True
             pygame.init()
@@ -141,6 +144,12 @@ while run:
                             self.jumpCount = 10
 
 
+                def shoot(self):
+                    bullet = Bullet(self.rect.centerx, self.rect.top + 50)
+                    all_sprites.add(bullet)
+                    bullets.add(bullet)
+
+
             class Mushroom(pygame.sprite.Sprite):
                 def __init__(self, x, y):
                     pygame.sprite.Sprite.__init__(self)
@@ -200,11 +209,11 @@ while run:
                     self.rect = self.image.get_rect()
                     self.rect.x = x
                     self.rect.y = y
-                    self.hp = 5
+                    self.hp = hp
                     self.speed_x = 0
 
 
-            class Ball(pygame.sprite.Sprite):
+            class Point(pygame.sprite.Sprite):
                 def __init__(self, x, y):
                     pygame.sprite.Sprite.__init__(self)
                     self.image = pygame.Surface((50, 50))
@@ -241,7 +250,7 @@ while run:
                     pygame.sprite.Sprite.__init__(self)
 
                     self.image = pygame.Surface((50, 50))
-                    self.image.fill('RED')
+                    self.image.fill('green')
                     self.rect = self.image.get_rect()
                     self.rect.x = x
                     self.rect.y = y
@@ -251,8 +260,8 @@ while run:
                     self.right_side = right_side
 
 
-            class KnifeThrow(pygame.sprite.Sprite):
-                def __init__(self, x, y, player_info):
+            class Key(pygame.sprite.Sprite):
+                def __init__(self, x, y):
                     pygame.sprite.Sprite.__init__(self)
 
                     self.image = pygame.Surface((50, 50))
@@ -261,13 +270,25 @@ while run:
                     self.rect.x = x
                     self.rect.y = y
                     self.speed_x = 0
-                    self.player_info = player_info
                     self.left_side = left_side
                     self.right_side = right_side
 
-                def throw(self):
-                    self.player_info[0] = self.rect.x
-                    self.rect.x += 1
+
+            class Bullet(pygame.sprite.Sprite):
+                def __init__(self, x, y):
+                    pygame.sprite.Sprite.__init__(self)
+                    self.image = pygame.Surface((10, 20))
+                    self.image.fill('YELLOW')
+                    self.rect = self.image.get_rect()
+                    self.rect.bottom = y
+                    self.rect.centerx = x
+                    self.speedy = -10
+
+                def update(self):
+                    self.rect.y += self.speedy
+
+                    if self.rect.bottom < 0:
+                        self.kill()
 
 
             class VerticalWall(pygame.sprite.Sprite):
@@ -299,20 +320,20 @@ while run:
             bomb = Bomb(1600, 800)
             boss = Boss(50, 100)
             mushroom_info = Mushroom(x=1500, y=800)
-            player = Player(0, 800, obstacles_hor=[(1200, 750, 50, 150)],
+            player = Player(x=0, y=800, obstacles_hor=[(1200, 750, 50, 150)],
                             obstacles_ver=[(600, 680, 200, 50),
                                            (300, 730, 200, 50), (950, 680, 200, 50)], mushroom_info=mushroom_info)
-            ball1 = Ball(50, 300)
-            ball2 = Ball(150, 300)
-            ball3 = Ball(250, 300)
-            ball4 = Ball(350, 300)
-            ball5 = Ball(450, 300)
-            knife = KnifeThrow(0, 0, player_info=player)
+            ball1 = Point(50, 300)
+            ball2 = Point(150, 300)
+            ball3 = Point(250, 300)
+            ball4 = Point(350, 300)
+            ball5 = Point(450, 300)
             ver_wall = VerticalWall(1200, 750, 50, 150)
             hor_wall = HorizontalWall(600, 680, 200, 50)
             hor_wall2 = HorizontalWall(300, 730, 200, 50)
             hor_wall3 = HorizontalWall(950, 680, 200, 50)
-
+            key = Key(1500, 500)
+            all_sprites.add(key)
             f6 = pygame.font.Font(None, 75)
             text6 = f6.render('ОЧКИ:', True, 'White')
             f7 = pygame.font.Font(None, 75)
@@ -320,6 +341,7 @@ while run:
             f8 = pygame.font.Font(None, 75)
             text8 = f8.render('МЯЧЕЙ:', True, 'White')
             f9 = pygame.font.Font(None, 75)
+            boss_group.add(boss)
             text9 = f9.render(str(balls), True, 'White')
             f10 = pygame.font.Font(None, 75)
             text10 = f10.render(str(ochko), True, 'White')
@@ -348,13 +370,17 @@ while run:
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                             player.isJump = True
+                        if event.key == pygame.K_e:
+                            player.shoot()
 
                 sc.fill('Black')
                 sc.blit(text6, (00, 0))
                 sc.blit(text8, (1300, 0))
                 sc.blit(text10, (300, 0))
                 sc.blit(text9, (1550, 0))
-
+                mushroom.add(mushroom_info)
+                turtle_group.add(turtle)
+                bomb_group.add(bomb)
                 for item in obstacles:
                     item.draw()
                 all_sprites.update()
@@ -390,6 +416,7 @@ while run:
                 if pygame.sprite.collide_rect(player, ball5):
                     balls += 1
                     weapon.remove(ball5)
+                if pygame.sprite.groupcollide(boss_group, bullets, True, True):
+                    hp -= 1    
                 player.jump()
-                knife.throw()
             pygame.quit()
