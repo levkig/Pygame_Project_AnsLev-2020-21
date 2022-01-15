@@ -17,7 +17,6 @@ text4 = f4.render('Escape', True, 'White')
 f5 = pygame.font.Font(None, 50)
 text5 = f5.render('Space', True, 'White')
 boss_group = pygame.sprite.Group()
-pygame.mixer.music.play(-1)
 
 yes = pygame.draw.rect(sc, 'GREEN', (750, 350, 300, 100))
 no = pygame.draw.rect(sc, 'RED', (750, 550, 300, 100))
@@ -31,6 +30,8 @@ turtle_group = pygame.sprite.Group()
 bomb_group = pygame.sprite.Group()
 
 pygame.mixer.music.load('music.mp3')
+pygame.mixer.music.play(-1)
+
 pygame.display.update()
 pos = pygame.mouse.get_pos()
 key = pygame.mouse.get_pressed()
