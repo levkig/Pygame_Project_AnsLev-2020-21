@@ -123,6 +123,12 @@ class Player(pygame.sprite.Sprite):
         all_sprites.add(bullet)
         bullets.add(bullet)
 
+    def shoot_right(self):
+        bullet2 = BulletRight(self.rect.centerx, self.rect.top + 50)
+        all_sprites.add(bullet2)
+        bullets.add(bullet2)
+
+
 class Reward(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -285,6 +291,23 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
 
 
+class BulletRight(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((20, 10))
+        self.image.fill('YELLOW')
+        self.rect = self.image.get_rect()
+        self.rect.bottom = y
+        self.rect.centerx = x
+        self.speedy = -10
+
+    def update(self):
+        self.rect.x -= self.speedy
+
+        if self.rect.bottom < 0:
+            self.kill()
+
+
 class VerticalWall(pygame.sprite.Sprite):
     def __init__(self, x, y, width_rect, height_rect):
         pygame.sprite.Sprite.__init__(self)
@@ -380,7 +403,7 @@ def main():
                     player.shoot()
                 if event.key == pygame.K_r:
                     balls += 1
-                    player.shoot()
+                    player.shoot_right()
         if pygame.sprite.collide_rect(player, ball1):
             ochko += a1
             a1 = 0
