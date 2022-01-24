@@ -9,11 +9,15 @@ mushroom = pygame.sprite.Group()
 turtle_group = pygame.sprite.Group()
 bomb_group = pygame.sprite.Group()
 
+cake_img = pygame.image.load('cake.png')
+cake_img.set_colorkey('White')
+cake_img2 = pygame.transform.scale(cake_img, (90, 90))
+
 mushroom_img = pygame.image.load('mushroom.png')
 mushroom_img.set_colorkey('White')
 mushroom_img2 = pygame.transform.scale(mushroom_img, (90, 90))
 
-turtle_img = pygame.image.load('turtle.jpg')
+turtle_img = pygame.image.load('turtle.png')
 turtle_img.set_colorkey('White')
 turtle_img2 = pygame.transform.scale(turtle_img, (150, 90))
 boss_group = pygame.sprite.Group()
@@ -27,6 +31,7 @@ all_sprites = pygame.sprite.Group()
 run = True
 pygame.init()
 width = 1800
+
 height = 900
 speed = 60
 neg = 2
@@ -104,6 +109,7 @@ class Player(pygame.sprite.Sprite):
                     neg = 5
                 if self.jumpCount < 0:
                     neg = -5
+
                     if pygame.sprite.collide_rect(player, pill):
                         neg -= 5
                 self.rect.y -= self.jumpCount ** 2 * 0.1 * neg
@@ -117,9 +123,21 @@ class Player(pygame.sprite.Sprite):
         all_sprites.add(bullet)
         bullets.add(bullet)
 
+class Reward(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = cake_img2
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.speed_x = 0
+
+    def update(self):
+        self.speed_x = 0
+
 
 class Mushroom(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y,):
         pygame.sprite.Sprite.__init__(self)
         self.image = mushroom_img2
         self.rect = self.image.get_rect()
@@ -193,25 +211,6 @@ class Point(pygame.sprite.Sprite):
         self.right_side = right_side
 
 
-class BallThrow(pygame.sprite.Sprite):
-    def __init__(self, x, y, player_info):
-        pygame.sprite.Sprite.__init__(self)
-
-        self.image = pygame.Surface((50, 50))
-        self.image.fill('RED')
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.speed_x = 0
-        self.player_info = player_info
-        self.left_side = left_side
-        self.right_side = right_side
-
-    def throw(self):
-        self.player_info[0] = self.rect.x
-        self.rect.x += 1
-
-
 class Knife(pygame.sprite.Sprite):
     def __init__(self, x, y, player_info):
         pygame.sprite.Sprite.__init__(self)
@@ -228,6 +227,34 @@ class Knife(pygame.sprite.Sprite):
 
 
 class Key(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface((50, 50))
+        self.image.fill('RED')
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.speed_x = 0
+        self.left_side = left_side
+        self.right_side = right_side
+
+
+class Key2(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface((50, 50))
+        self.image.fill('RED')
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.speed_x = 0
+        self.left_side = left_side
+        self.right_side = right_side
+
+
+class Princess(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
 
@@ -296,6 +323,12 @@ ball3 = Point(250, 300)
 ball4 = Point(350, 300)
 ball5 = Point(450, 300)
 
+a1 = 1
+a2 = 1
+a3 = 1
+a4 = 1
+a5 = 1
+reward = Reward(1600, 600)
 ver_wall = VerticalWall(1200, 750, 50, 150)
 hor_wall = HorizontalWall(600, 680, 200, 50)
 hor_wall2 = HorizontalWall(300, 730, 200, 50)
@@ -316,7 +349,7 @@ weapon.add(ball2)
 weapon.add(ball3)
 weapon.add(ball4)
 weapon.add(ball5)
-all_sprites.add()
+all_sprites.add(reward)
 all_sprites.add(player)
 all_sprites.add(mushroom_info)
 all_sprites.add(turtle)
@@ -325,11 +358,15 @@ all_sprites.add(bomb)
 all_sprites.add(boss)
 obstacles = [hor_wall, hor_wall2, hor_wall3, ver_wall]
 over = False
+
+
 def main():
     ochko = 0
     balls = 0
     hp = 25
-    run=True
+    f15 = pygame.font.Font(None, 150)
+    text15 = f15.render('С Днем Рождение!', True, 'White')
+    run = True
     while run:
         clock.tick(speed)
         for event in pygame.event.get():
@@ -341,21 +378,28 @@ def main():
                 if event.key == pygame.K_e:
                     balls += 1
                     player.shoot()
-
+                if event.key == pygame.K_r:
+                    balls += 1
+                    player.shoot()
         if pygame.sprite.collide_rect(player, ball1):
-            ochko += 1
+            ochko += a1
+            a1 = 0
             weapon.remove(ball1)
         if pygame.sprite.collide_rect(player, ball2):
-            ochko += 1
+            ochko += a2
+            a2 = 0
             weapon.remove(ball2)
         if pygame.sprite.collide_rect(player, ball3):
-            ochko += 1
+            ochko += a3
+            a3 = 0
             weapon.remove(ball3)
         if pygame.sprite.collide_rect(player, ball4):
-            ochko += 1
+            ochko += a4
+            a4 = 0
             weapon.remove(ball4)
         if pygame.sprite.collide_rect(player, ball5):
-            ochko += 1
+            ochko += a5
+            a5 = 0
             weapon.remove(ball5)
 
         sc.fill('Black')
@@ -368,6 +412,9 @@ def main():
         sc.blit(text8, (1300, 0))
         sc.blit(text9, (1550, 0))
         sc.blit(text10, (200, 0))
+        if pygame.sprite.collide_rect(player, reward):
+            all_sprites.remove(reward)
+            sc.blit(text15, (700, 300))
         mushroom.add(mushroom_info)
         turtle_group.add(turtle)
         bomb_group.add(bomb)
@@ -393,10 +440,11 @@ def main():
             over = True
         if pygame.sprite.groupcollide(boss_group, bullets, False, True):
             hp -= 1
-            print(hp)
+            ochko += 10
         if hp <= 0:
             all_sprites.remove(boss)
             pygame.init()
+
             return ochko, hp, balls
         player.jump()
     pygame.quit()
