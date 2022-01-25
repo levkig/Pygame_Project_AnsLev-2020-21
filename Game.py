@@ -367,10 +367,13 @@ weapon.add(ball2)
 weapon.add(ball3)
 weapon.add(ball4)
 weapon.add(ball5)
-all_sprites.add(reward)
+mushroom.add(mushroom_info)
+bomb_group.add(bomb)
+turtle_group.add(turtle)
 all_sprites.add(player)
 all_sprites.add(mushroom_info)
 all_sprites.add(turtle)
+all_sprites.add(reward)
 all_sprites.add(pill)
 all_sprites.add(bomb)
 all_sprites.add(boss)
@@ -387,7 +390,7 @@ def main():
     a3 = 20
     a4 = 20
     a5 = 20
-
+    a6 = 50
     f15 = pygame.font.Font(None, 150)
     text15 = f15.render('С Днем Рождение!', True, 'White')
     run = True
@@ -439,6 +442,8 @@ def main():
         if pygame.sprite.collide_rect(player, reward):
             all_sprites.remove(reward)
             sc.blit(text15, (700, 300))
+            ochko += a6
+            a6 = 0
         mushroom.add(mushroom_info)
         turtle_group.add(turtle)
         bomb_group.add(bomb)
@@ -465,6 +470,12 @@ def main():
         if pygame.sprite.groupcollide(boss_group, bullets, False, True):
             hp -= 1
             ochko += 10
+        if pygame.sprite.groupcollide(turtle_group, bullets, False, True):
+            pass
+        if pygame.sprite.groupcollide(mushroom, bullets, False, True):
+            pass
+        if pygame.sprite.groupcollide(bomb_group, bullets, True, True):
+            pass
         if hp <= 0:
             all_sprites.remove(boss)
             pygame.init()
