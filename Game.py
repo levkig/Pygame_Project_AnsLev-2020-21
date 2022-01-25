@@ -332,7 +332,7 @@ class HorizontalWall(pygame.sprite.Sprite):
         pygame.draw.rect(sc, 'WHITE', (self.x, self.y, self.width_rect, self.height_rect))
 
 
-pill = Pills(500, 800)
+pill = Pills(1000, 800)
 turtle = Turtle(1700, 800)
 bomb = Bomb(1600, 800)
 boss = Boss(50, 100)
@@ -340,17 +340,12 @@ mushroom_info = Mushroom(x=1500, y=800)
 player = Player(x=0, y=800, obstacles_hor=[(1200, 750, 50, 150)],
                 obstacles_ver=[(600, 680, 200, 50),
                                (300, 730, 200, 50), (950, 680, 200, 50)], mushroom_info=mushroom_info)
-ball1 = Point(50, 300)
-ball2 = Point(150, 300)
-ball3 = Point(250, 300)
-ball4 = Point(350, 300)
-ball5 = Point(450, 300)
+ball1 = Point(450, 830)
+ball2 = Point(800, 830)
+ball3 = Point(1000, 620)
+ball4 = Point(400, 670)
+ball5 = Point(650, 620)
 
-a1 = 1
-a2 = 1
-a3 = 1
-a4 = 1
-a5 = 1
 reward = Reward(1600, 600)
 ver_wall = VerticalWall(1200, 750, 50, 150)
 hor_wall = HorizontalWall(600, 680, 200, 50)
@@ -387,6 +382,12 @@ def main():
     ochko = 0
     balls = 0
     hp = 25
+    a1 = 20
+    a2 = 20
+    a3 = 20
+    a4 = 20
+    a5 = 20
+
     f15 = pygame.font.Font(None, 150)
     text15 = f15.render('С Днем Рождение!', True, 'White')
     run = True
@@ -467,7 +468,6 @@ def main():
         if hp <= 0:
             all_sprites.remove(boss)
             pygame.init()
-
             return ochko, hp, balls
         player.jump()
     pygame.quit()
