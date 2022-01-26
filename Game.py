@@ -3,14 +3,6 @@ import random
 pygame.init()
 
 
-class Level:
-    def __init__(self, level, mushroom, obstacles, turtle):
-        pass
-
-level1 = Level(level=1,mushrooms=[(0, 0, 0, 0),], obstacles=[(0,0,0,0)])
-levels = [level1, ]
-
-
 player_img = pygame.image.load('mario.png')
 player_img.set_colorkey('White')
 player_img2 = pygame.transform.scale(player_img, (110, 110))
@@ -162,7 +154,6 @@ class Mushroom(pygame.sprite.Sprite):
         self.pa = self.rect.top
         self.ta = self.rect.right
         self.ya = self.rect.left
-        self.random = random.randint(1300, 1800)
 
 
 class Turtle(pygame.sprite.Sprite):
@@ -324,9 +315,10 @@ class VerticalWall(pygame.sprite.Sprite):
         self.y = y
         self.width_rect = width_rect
         self.height_rect = height_rect
+        self.rect = pygame.draw.rect(sc, 'WHITE', (self.x, self.y, self.width_rect, self.height_rect))
 
     def draw(self):
-        pygame.draw.rect(sc, 'WHITE', (self.x, self.y, self.width_rect, self.height_rect))
+        pass
 
 
 class HorizontalWall(pygame.sprite.Sprite):
@@ -336,9 +328,10 @@ class HorizontalWall(pygame.sprite.Sprite):
         self.y = y
         self.width_rect = width_rect
         self.height_rect = height_rect
+        self.rect = pygame.draw.rect(sc, 'WHITE', (self.x, self.y, self.width_rect, self.height_rect))
 
     def draw(self):
-        pygame.draw.rect(sc, 'WHITE', (self.x, self.y, self.width_rect, self.height_rect))
+        pass
 
 
 pill = Pills(1000, 800)
@@ -389,11 +382,30 @@ all_sprites.add(boss)
 obstacles = [hor_wall, hor_wall2, hor_wall3, ver_wall]
 over = False
 
+dy = None
+cnt = 0
+
+
+def move_mushroom(mushroom_info, obstacle, n, m):
+    global cnt, dy
+    if cnt == 0:
+        dy = random.choice([-1, 1])
+        cnt = random.randint(30, 50)
+    ny = mushroom_info.rect.left + dy if dy == -1 else mushroom_info.rect.right + dy
+    if dy == -1 and ny < 0 or dy == 1 and ny > 1800:
+        cnt = 0
+        move_mushroom(mushroom_info, obstacle, 1800, 900)
+    for obs in obstacle:
+        if dy == -1 and ny == obs.rect.right or dy == 1 and ny == obs.rect.left:
+            move_mushroom(mushroom_info, obstacle, 1800, 900)
+    cnt -= 1
+    return Mushroom(mushroom_info.rect.x + dy, mushroom_info.rect.y)
+
 
 def main():
     ochko = 0
     balls = 0
-    
+
     hp = 25
     a1, a2, a3 = 20, 20, 20
     a4, a5 = 20, 20
@@ -436,6 +448,15 @@ def main():
             weapon.remove(ball5)
 
         sc.fill('Black')
+        global mushroom_info
+        if mushroom_info:
+            all_sprites.remove(mushroom_info)
+            mushroom_info = move_mushroom(mushroom_info, obstacles, 1800, 900)
+            all_sprites.add(mushroom_info)
+            if player.rect.bottom == mushroom_info.rect.top and abs(player.rect.centerx - mushroom_info.rect.centerx) < 110:
+                print('ok')
+                all_sprites.remove(mushroom_info)
+                mushroom_info = None
         f9 = pygame.font.Font(None, 75)
         text9 = f9.render(str(balls), True, 'White')
         f10 = pygame.font.Font(None, 75)
@@ -449,7 +470,8 @@ def main():
             all_sprites.remove(reward)
             ochko += a6
             a6 = 0
-        mushroom.add(mushroom_info)
+        if mushroom_info:
+            mushroom.add(mushroom_info)
         turtle_group.add(turtle)
         bomb_group.add(bomb)
         for item in obstacles:
@@ -464,7 +486,7 @@ def main():
             seconds_left = 15
             neg = 4
             used = True
-        if pygame.sprite.collide_rect(player, mushroom_info):
+        if mushroom_info and pygame.sprite.collide_rect(player, mushroom_info):
             if not used:
                 over = True
         if pygame.sprite.collide_rect(player, turtle):
