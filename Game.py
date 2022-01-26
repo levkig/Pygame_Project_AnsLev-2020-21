@@ -2,6 +2,15 @@ import pygame
 import random
 pygame.init()
 
+
+class Level:
+    def __init__(self, level, mushroom, obstacles, turtle):
+        pass
+
+level1 = Level(level=1,mushrooms=[(0, 0, 0, 0),], obstacles=[(0,0,0,0)])
+levels = [level1, ]
+
+
 player_img = pygame.image.load('mario.png')
 player_img.set_colorkey('White')
 player_img2 = pygame.transform.scale(player_img, (110, 110))
@@ -11,7 +20,7 @@ bomb_group = pygame.sprite.Group()
 
 cake_img = pygame.image.load('cake.png')
 cake_img.set_colorkey('White')
-cake_img2 = pygame.transform.scale(cake_img, (90, 90))
+cake_img2 = pygame.transform.scale(cake_img, (200, 200))
 
 mushroom_img = pygame.image.load('mushroom.png')
 mushroom_img.set_colorkey('White')
@@ -384,15 +393,12 @@ over = False
 def main():
     ochko = 0
     balls = 0
+    
     hp = 25
-    a1 = 20
-    a2 = 20
-    a3 = 20
-    a4 = 20
-    a5 = 20
+    a1, a2, a3 = 20, 20, 20
+    a4, a5 = 20, 20
     a6 = 50
     f15 = pygame.font.Font(None, 150)
-    text15 = f15.render('С Днем Рождение!', True, 'White')
     run = True
     while run:
         clock.tick(speed)
@@ -441,7 +447,6 @@ def main():
         sc.blit(text10, (200, 0))
         if pygame.sprite.collide_rect(player, reward):
             all_sprites.remove(reward)
-            sc.blit(text15, (700, 300))
             ochko += a6
             a6 = 0
         mushroom.add(mushroom_info)
