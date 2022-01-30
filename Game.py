@@ -1,4 +1,3 @@
-from ast import PyCF_ALLOW_TOP_LEVEL_AWAIT
 import json
 import time
 import pygame
